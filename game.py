@@ -4,14 +4,13 @@ Class Game
 
 import random
 import string
+import requests
 
 # pylint: disable=missing-docstring
 # pylint: disable=too-few-public-methods
 
 class Game:
-    """
-    Class Game
-    """
+    DICTIONARY_API = "https://wagon-dictionary.herokuapp.com/"
     def __init__(self):
         """
         Init class
@@ -33,6 +32,13 @@ class Game:
                 self.grid.remove(letter)
             except ValueError:
                 return False
+        # Test if word is in dictionary
+        r = requests.get(f"{self.DICTIONARY_API}{word}")
+        if r.status_code != 200:
+            return False
+        resp = r.json()
+        if not resp["found"]:
+            return False
         return True
 
 
